@@ -29,7 +29,6 @@ void rainbow2(float value,float* R,float* G,float* B)
 	*R = 0;
 	*G = 0;
 	*B = 0;
-   value = (value);
 	if (value < 0.5){
 		*B = 2*value;
 		*G = 0;
@@ -51,15 +50,18 @@ void summer(float value,float* R,float* G,float* B)
 
 void rainbow_long(float value,float* R,float* G,float* B)
 {
+	value = 1 - value;
+	value = asin(.95*value) * 2 / 3.14;
 	float a=(1-value)/0.25;
 	int X=floor(a);
+
 	switch(X)
 	{
-		case 0: *R=1;*G=0;*B=0;break;
-		case 1: *R=1;*G=1;*B=0;break;
-		case 2: *R=0;*G=1;*B=0;break;
-		case 3: *R=0;*G=1;*B=1;break;
-		case 4: *R=0;*G=0;*B=0;break;
+		case 0: *R=.4;*G=0.1;*B=0.08;break;
+		case 1: *R=.8;*G=.8;*B=0;break;
+		case 2: *R=0;*G=.8;*B=0;break;
+		case 3: *R=0;*G=.8;*B=.8;break;
+		case 4: *R=0;*G=0;*B=.8;break;
 	}
 }
 
@@ -74,7 +76,6 @@ void set_colormap(float vy, float maxvy)
 		vy = vy/maxvy;
 	}
 	vy = 0.9*vy + .1;
-
    if (scalar_col==COLOR_BLACKWHITE)
        R = G = B = vy;
    else if (scalar_col==COLOR_RAINBOW){
