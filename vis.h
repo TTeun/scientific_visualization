@@ -12,7 +12,7 @@ const int COLOR_RAINBOW=1;
 const int COLOR_BANDS=2;
 int   scalar_col = 0;           //method for scalar coloring
 int   clamping = 1;
-float clamp_param = 1.0;
+float clamp_param = 0.3;
 
 //rainbow: Implements a color palette, mapping the scalar 'value' to a rainbow color RGB
 void rainbow(float value,float* R,float* G,float* B)
@@ -29,15 +29,22 @@ void rainbow2(float value,float* R,float* G,float* B)
 	*R = 0;
 	*G = 0;
 	*B = 0;
-   value = sin(value);
+   value = (value);
 	if (value < 0.5){
 		*B = 2*value;
 		*G = 0;
 	}
 	else {
 		*B = 1-2*(value - 0.5);
-		*R = sin(2*(value - 0.5));
+		*R = 2*(value - 0.5);
 	}
+}
+
+void summer(float value,float* R,float* G,float* B)
+{
+	*B = .05;
+	*G = .7;
+	*R = value;
 }
 
 
@@ -55,7 +62,6 @@ void rainbow_long(float value,float* R,float* G,float* B)
 	}
 }
 
-
 //set_colormap: Sets three different types of colormaps
 void set_colormap(float vy, float maxvy)
 {
@@ -66,18 +72,19 @@ void set_colormap(float vy, float maxvy)
 	} else {
 		vy = vy/maxvy;
 	}
+	vy = 0.9*vy + .1;
+
    if (scalar_col==COLOR_BLACKWHITE)
        R = G = B = vy;
    else if (scalar_col==COLOR_RAINBOW){
-       rainbow_long(vy,&R,&G,&B);
+       summer(vy,&R,&G,&B);
    }
    else if (scalar_col==COLOR_BANDS)
        {
-          const int NLEVELS = 7;
+          const int NLEVELS = 5;
           vy *= NLEVELS; vy = (int)(vy); vy/= NLEVELS;
-	      rainbow2(vy,&R,&G,&B);
+	      rainbow_long(vy,&R,&G,&B);
 	   }
-
    glColor3f(R,G,B);
 }
 
