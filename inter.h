@@ -39,11 +39,12 @@ void keyboard(unsigned char key, int x, int y)
 		    if (draw_vecs==0) draw_smoke = 1; break;
 	  case 'm': scalar_col++; if (scalar_col>COLOR_BANDS) scalar_col=COLOR_BLACKWHITE; break;
 	  case 'a': frozen = 1-frozen; break;
+	  case 'l': clamp_param += .2; break;
+	  case 'k': clamp_param -= .2; break;
+	  case 'o': clamping = 1 - clamping; break;
 	  case 'q': exit(0);
 	}
 }
-
-
 
 // drag: When the user drags with the mouse, add a force that corresponds to the direction of the mouse
 //       cursor movement. Also inject some new matter into the field at the mouse location.

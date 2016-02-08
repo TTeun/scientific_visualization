@@ -5,39 +5,77 @@
 int   winWidth, winHeight;      //size of the graphics window, in pixels
 int   color_dir = 0;            //use direction color-coding or not
 float vec_scale = 1000;			//scaling of hedgehogs
-int   draw_smoke = 0;           //draw the smoke or not
-int   draw_vecs = 1;            //draw the vector field or not
+int   draw_smoke = 1;           //draw the smoke or not
+int   draw_vecs = 0;            //draw the vector field or not
 const int COLOR_BLACKWHITE=0;   //different types of color mapping: black-and-white, rainbow, banded
 const int COLOR_RAINBOW=1;
 const int COLOR_BANDS=2;
 int   scalar_col = 0;           //method for scalar coloring
-
+int   clamping = 1;
+float clamp_param = 1.0;
 
 //rainbow: Implements a color palette, mapping the scalar 'value' to a rainbow color RGB
 void rainbow(float value,float* R,float* G,float* B)
 {
-   const float dx=0.8;
-   if (value<0) value=0; if (value>1) value=1;
+   const float dx=0.8f;
    value = (6-2*dx)*value+dx;
    *R = max(0.0,(3-fabs(value-4)-fabs(value-5))/2);
    *G = max(0.0,(4-fabs(value-2)-fabs(value-4))/2);
    *B = max(0.0,(3-fabs(value-1)-fabs(value-2))/2);
 }
 
+void rainbow2(float value,float* R,float* G,float* B)
+{
+	*R = 0;
+	*G = 0;
+	*B = 0;
+   value = sin(value);
+	if (value < 0.5){
+		*B = 2*value;
+		*G = 0;
+	}
+	else {
+		*B = 1-2*(value - 0.5);
+		*R = sin(2*(value - 0.5));
+	}
+}
+
+
+void rainbow_long(float value,float* R,float* G,float* B)
+{
+	float a=(1-value)/0.25;
+	int X=floor(a);
+	switch(X)
+	{
+		case 0: *R=1;*G=0;*B=0;break;
+		case 1: *R=1;*G=1;*B=0;break;
+		case 2: *R=0;*G=1;*B=0;break;
+		case 3: *R=0;*G=1;*B=1;break;
+		case 4: *R=0;*G=0;*B=0;break;
+	}
+}
+
+
 //set_colormap: Sets three different types of colormaps
-void set_colormap(float vy)
+void set_colormap(float vy, float maxvy)
 {
    float R,G,B;
-
+   if (clamping){
+	    if (vy > clamp_param) vy = clamp_param;
+	    vy /= clamp_param;
+	} else {
+		vy = vy/maxvy;
+	}
    if (scalar_col==COLOR_BLACKWHITE)
        R = G = B = vy;
-   else if (scalar_col==COLOR_RAINBOW)
-       rainbow(vy,&R,&G,&B);
+   else if (scalar_col==COLOR_RAINBOW){
+       rainbow_long(vy,&R,&G,&B);
+   }
    else if (scalar_col==COLOR_BANDS)
        {
           const int NLEVELS = 7;
           vy *= NLEVELS; vy = (int)(vy); vy/= NLEVELS;
-	      rainbow(vy,&R,&G,&B);
+	      rainbow2(vy,&R,&G,&B);
 	   }
 
    glColor3f(R,G,B);
@@ -70,13 +108,20 @@ void direction_to_color(float x, float y, int method)
 //visualize: This is the main visualization function
 void visualize(void)
 {
-	int        i, j, idx; double px,py;
+	int        i, j, k, idx; double px,py;
 	fftw_real  wn = (fftw_real)winWidth / (fftw_real)(DIM + 1);   // Grid cell width
 	fftw_real  hn = (fftw_real)winHeight / (fftw_real)(DIM + 1);  // Grid cell heigh
 
 	if (draw_smoke)
 	{
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	
+	// Find max(rho)
+	fftw_real maxrho = 0.0f;
+	for (k=0;k< (DIM-1) * (DIM-1);k++){
+		maxrho = (rho[k] > maxrho)? rho[k] : maxrho;
+	}
+	
 	for (j = 0; j < DIM - 1; j++)			//draw smoke
 	{
 		glBegin(GL_TRIANGLE_STRIP);
@@ -93,19 +138,19 @@ void visualize(void)
 			px = wn + (fftw_real)i * wn;
 			py = hn + (fftw_real)(j + 1) * hn;
 			idx = ((j + 1) * DIM) + i;
-			set_colormap(rho[idx]);
+			set_colormap(rho[idx],maxrho);
 			glVertex2f(px, py);
 			px = wn + (fftw_real)(i + 1) * wn;
 			py = hn + (fftw_real)j * hn;
 			idx = (j * DIM) + (i + 1);
-			set_colormap(rho[idx]);
+			set_colormap(rho[idx],maxrho);
 			glVertex2f(px, py);
 		}
 
 		px = wn + (fftw_real)(DIM - 1) * wn;
 		py = hn + (fftw_real)(j + 1) * hn;
 		idx = ((j + 1) * DIM) + (DIM - 1);
-		set_colormap(rho[idx]);
+		set_colormap(rho[idx],maxrho);
 		glVertex2f(px, py);
 		glEnd();
 	}
@@ -124,4 +169,5 @@ void visualize(void)
 	    }
 	  glEnd();
 	}
+	
 }

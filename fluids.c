@@ -7,7 +7,6 @@
 #include <stdio.h>              //for printing the help text
 #include <math.h>               //for various math functions
 #include <GL/glut.h>            //the GLUT graphics library
-#include <GLUI.h>
 #include "sim.h"
 #include "vis.h"
 #include "inter.h"
@@ -27,6 +26,9 @@ int main(int argc, char **argv)
 	printf("y:     toggle drawing hedgehogs on/off\n");
 	printf("m:     toggle thru scalar coloring\n");
 	printf("a:     toggle the animation on/off\n");
+	printf("k:     increase clamp maximum\n");
+	printf("l:     decrease clamp maximum\n");
+	printf("o:     swap between clamping and scaling\n");
 	printf("q:     quit\n\n");
 
 	glutInit(&argc, argv);
