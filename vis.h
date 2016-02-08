@@ -14,31 +14,6 @@ int   scalar_col = 0;           //method for scalar coloring
 int   clamping = 1;
 float clamp_param = 0.3;
 
-//rainbow: Implements a color palette, mapping the scalar 'value' to a rainbow color RGB
-void rainbow(float value,float* R,float* G,float* B)
-{
-   const float dx=0.8f;
-   value = (6-2*dx)*value+dx;
-   *R = max(0.0,(3-fabs(value-4)-fabs(value-5))/2);
-   *G = max(0.0,(4-fabs(value-2)-fabs(value-4))/2);
-   *B = max(0.0,(3-fabs(value-1)-fabs(value-2))/2);
-}
-
-void rainbow2(float value,float* R,float* G,float* B)
-{
-	*R = 0;
-	*G = 0;
-	*B = 0;
-	if (value < 0.5){
-		*B = 2*value;
-		*G = 0;
-	}
-	else {
-		*B = 1-2*(value - 0.5);
-		*R = 2*(value - 0.5);
-	}
-}
-
 void summer(float value,float* R,float* G,float* B)
 {
 	value = sin(value);
@@ -50,19 +25,21 @@ void summer(float value,float* R,float* G,float* B)
 
 void rainbow_long(float value,float* R,float* G,float* B)
 {
-	value = 1 - value;
 	value = asin(.95*value) * 2 / 3.14;
 	float a=(1-value)/0.25;
 	int X=floor(a);
 
 	switch(X)
 	{
-		case 0: *R=.4;*G=0.1;*B=0.08;break;
-		case 1: *R=.8;*G=.8;*B=0;break;
-		case 2: *R=0;*G=.8;*B=0;break;
-		case 3: *R=0;*G=.8;*B=.8;break;
-		case 4: *R=0;*G=0;*B=.8;break;
+		case 0: *R=.6;*G=0.1;*B=0.1;break;
+		case 1: *R=.6;*G=.5;*B=0.1;break;
+		case 2: *R=0;*G=.5;*B=0.1;break;
+		case 3: *R=0;*G=.4;*B=.4;break;
+		case 4: *R=0;*G=0.1;*B=.4;break;
 	}
+	*B += 0.1;
+	*G += 0.1;
+	*R += 0.1;
 }
 
 //set_colormap: Sets three different types of colormaps
