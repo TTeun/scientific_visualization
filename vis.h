@@ -1,4 +1,4 @@
-//------ VISUALIZATION CODE STARTS HERE -----------------------------------------------------------------
+#include "colors.h"
 
 
 //--- VISUALIZATION PARAMETERS ---------------------------------------------------------------------
@@ -14,104 +14,8 @@ const int COLOR_PSYCH1 = 3;
 const int COLOR_PSYCH2 = 4;
 int   scalar_col = 0;           //method for scalar coloring
 int   clamping = 1;
-float clamp_param = 0.3;
-
-float absolute(float a){
-	return (a > 0)? a : (-a);
-}
-
-void summer(float value,float* R,float* G,float* B)
-{
-	value = sin(value);
-	*B = 1;
-	*G = 1-value;
-	*R = 1-value;
-	
-	if ((0.3<value) && (0.35 > value)){
-		*G -= 50*(absolute(value - 0.325) - 0.025); 
-		*R -= 50*(absolute(value - 0.325) - 0.025); 
-		*B = 0.5;	
-	}
-
-	if ((0.55<value) && (0.6 > value)){
-		int offset = (absolute(value - 0.575) - 0.025);
-		*B -= 50*offset;	
-	}
-}
-
-void psychedelic1(float value,float* R,float* G,float* B)
-{
-		
-	*G = *R = *B = .95;
-	if (value < 0.25)
-	{
-		*B = 4*value;
-	} 
-	else if (value < 0.5)
-	{
-		*G = 4*(value - 0.25);
-		*B = 2 - 4*value;
-	}
-	else if (value < 0.75)
-	{
-		*R = 4*(value - 0.5);
-		*B = 3 - 4*value;
-	}
-	else if (value <= 1)
-	{
-		*R = 4 - 4*value;
-	}
-}
-
-
-void psychedelic2(float value,float* R,float* G,float* B)
-{
-		
-	*G = *R = *B = .0;
-	if (value < 0.25)
-	{
-		*B = 4*value;
-	} 
-	else if (value < 0.5)
-	{
-		*G = 4*(value - 0.25);
-		*B = 2 - 4*value;
-	}
-	else if (value < 0.75)
-	{
-		*R = 4*(value - 0.5);
-		*B = 3 - 4*value;
-	}
-	else if (value <= 1)
-	{
-		*R = 4 - 4*value;
-	}
-}
-
-void rainbow_long(float value,float* R,float* G,float* B)
-{
-		
-	*G = *R = *B = .0;
-	if (value < 0.25)
-	{
-		*B = 4*value;
-	} 
-	else if (value < 0.5)
-	{
-		*G = 4*(value - 0.25);
-		*B = 2 - 4*value;
-	}
-	else if (value < 0.75)
-	{
-		*R = 4*(value - 0.5);
-		*B = 3 - 4*value;
-	}
-	if ((value <= 1) && (value > 0.75))
-	{
-		*R = 4 - 4*(value - 0.75);
-	}
-}
-
+float clamp_param = 0.1;
+int   NLEVELS = 5;
 
 //set_colormap: Sets three different types of colormaps
 void set_colormap(float vy, float maxvy)
@@ -131,7 +35,6 @@ void set_colormap(float vy, float maxvy)
    }
    else
        {
-          const int NLEVELS = 5;
           vy *= NLEVELS; vy = (int)(vy); vy/= NLEVELS;
           if (scalar_col == COLOR_PSYCH1)
 				psychedelic1(vy,&R,&G,&B);
@@ -171,6 +74,8 @@ void direction_to_color(float x, float y, int method)
 //visualize: This is the main visualization function
 void visualize(void)
 {
+	glutSetWindow(1);
+
 	int        i, j, k, idx; double px,py;
 	fftw_real  wn = (fftw_real)winWidth / (fftw_real)(DIM + 1);   // Grid cell width
 	fftw_real  hn = (fftw_real)winHeight / (fftw_real)(DIM + 1);  // Grid cell heigh
@@ -232,5 +137,4 @@ void visualize(void)
 	    }
 	  glEnd();
 	}
-	
 }

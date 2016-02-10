@@ -1,5 +1,36 @@
 //------ INTERACTION CODE STARTS HERE -----------------------------------------------------------------
 
+void drawColorLegend(){
+	int i, j;
+	double px, py;
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glutSetWindow(1);
+	for (j = 0; j < winHeight - 1; j++)			
+	{
+		glBegin(GL_TRIANGLE_STRIP);
+
+		i = 0;
+		px = i;
+		py = j;
+		glVertex2f(px,py);
+
+		for (i = 0; i < 20 - 1; i++)
+		{
+			px = i;
+			py = (j + 1);
+			set_colormap(j * clamp_param/winHeight,clamp_param);
+			glVertex2f(px, py);
+			px = (i + 1);
+			py = j;
+			set_colormap(j * clamp_param/winHeight,clamp_param);
+			glVertex2f(px, py);
+		}
+		glVertex2f(px, py);
+		glEnd();
+	}	
+}
+
+
 //display: Handle window redrawing events. Simply delegates to visualize().
 void display(void)
 {
@@ -7,6 +38,8 @@ void display(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	visualize();
+	drawColorLegend();
+	glutPostRedisplay();
 	glFlush();
 	glutSwapBuffers();
 }
@@ -26,9 +59,9 @@ void keyboard(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
-	  case 't': dt -= 0.001; break;
-	  case 'T': dt += 0.001; break;
-	  case 'c': color_dir = 1 - color_dir; break;
+	  case 't': if (dt > -.8) dt -= 0.1; break;
+	  case 'T': dt += 0.1; break;
+	  case 'c': color_dir = 1 - color_dir;  break;
 	  case 'S': vec_scale *= 1.2; break;
 	  case 's': vec_scale *= 0.8; break;
 	  case 'V': visc *= 5; break;
@@ -38,9 +71,11 @@ void keyboard(unsigned char key, int x, int y)
 	  case 'y': draw_vecs = 1 - draw_vecs;
 		    if (draw_vecs==0) draw_smoke = 1; break;
 	  case 'm': scalar_col++; if (scalar_col>COLOR_PSYCH2) scalar_col=COLOR_BLACKWHITE; break;
+	  case 'n': NLEVELS ++; break;
+	  case 'b': if (NLEVELS > 0) NLEVELS --; break;
 	  case 'a': frozen = 1-frozen; break;
-	  case 'l': clamp_param += .2; break;
-	  case 'k': clamp_param -= .2; break;
+	  case 'l': clamp_param += .1; break;
+	  case 'k': clamp_param -= .1; break;
 	  case 'o': clamping = 1 - clamping; break;
 	  case 'q': exit(0);
 	}

@@ -25,10 +25,11 @@ int main(int argc, char **argv)
 	printf("x:     toggle drawing matter on/off\n");
 	printf("y:     toggle drawing hedgehogs on/off\n");
 	printf("m:     toggle thru scalar coloring\n");
-	printf("a:     toggle the animation on/off\n");
-	printf("k:     increase clamp maximum\n");
-	printf("l:     decrease clamp maximum\n");
+	printf("k/l:   toggle thru scalar coloring\n");
+	printf("b/n:   decrease/increase number of colors\n");
+	printf("k/l:   decrease/increase clamp maximum\n");
 	printf("o:     swap between clamping and scaling\n");
+	printf("a:     toggle the animation on/off\n");
 	printf("q:     quit\n\n");
 
 	glutInit(&argc, argv);
@@ -40,7 +41,7 @@ int main(int argc, char **argv)
 	glutIdleFunc(do_one_simulation_step);
 	glutKeyboardFunc(keyboard);
 	glutMotionFunc(drag);
-
+	
 	init_simulation(DIM);	//initialize the simulation data structures
 	glutMainLoop();			//calls do_one_simulation_step, keyboard, display, drag, reshape
 	return 0;
