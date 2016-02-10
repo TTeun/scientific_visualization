@@ -7,12 +7,18 @@ int   color_dir = 0;            //use direction color-coding or not
 float vec_scale = 600;			//scaling of hedgehogs
 int   draw_smoke = 1;           //draw the smoke or not
 int   draw_vecs = 0;            //draw the vector field or not
-const int COLOR_BLACKWHITE=0;   //different types of color mapping: black-and-white, rainbow, banded
-const int COLOR_RAINBOW=1;
-const int COLOR_BANDS=2;
+const int COLOR_BLACKWHITE = 0;   //different types of color mapping: black-and-white, rainbow, banded
+const int COLOR_RAINBOW = 1;
+const int COLOR_BANDS = 2;
+const int COLOR_PSYCH1 = 3;
+const int COLOR_PSYCH2 = 4;
 int   scalar_col = 0;           //method for scalar coloring
 int   clamping = 1;
 float clamp_param = 0.3;
+
+float absolute(float a){
+	return (a > 0)? a : (-a);
+}
 
 void summer(float value,float* R,float* G,float* B)
 {
@@ -20,27 +26,92 @@ void summer(float value,float* R,float* G,float* B)
 	*B = 1;
 	*G = 1-value;
 	*R = 1-value;
+	
+	if ((0.3<value) && (0.35 > value)){
+		*G -= 50*(absolute(value - 0.325) - 0.025); 
+		*R -= 50*(absolute(value - 0.325) - 0.025); 
+		*B = 0.5;	
+	}
+
+	if ((0.55<value) && (0.6 > value)){
+		int offset = (absolute(value - 0.575) - 0.025);
+		*B -= 50*offset;	
+	}
 }
 
+void psychedelic1(float value,float* R,float* G,float* B)
+{
+		
+	*G = *R = *B = .95;
+	if (value < 0.25)
+	{
+		*B = 4*value;
+	} 
+	else if (value < 0.5)
+	{
+		*G = 4*(value - 0.25);
+		*B = 2 - 4*value;
+	}
+	else if (value < 0.75)
+	{
+		*R = 4*(value - 0.5);
+		*B = 3 - 4*value;
+	}
+	else if (value <= 1)
+	{
+		*R = 4 - 4*value;
+	}
+}
+
+
+void psychedelic2(float value,float* R,float* G,float* B)
+{
+		
+	*G = *R = *B = .0;
+	if (value < 0.25)
+	{
+		*B = 4*value;
+	} 
+	else if (value < 0.5)
+	{
+		*G = 4*(value - 0.25);
+		*B = 2 - 4*value;
+	}
+	else if (value < 0.75)
+	{
+		*R = 4*(value - 0.5);
+		*B = 3 - 4*value;
+	}
+	else if (value <= 1)
+	{
+		*R = 4 - 4*value;
+	}
+}
 
 void rainbow_long(float value,float* R,float* G,float* B)
 {
-	value = asin(.95*value) * 2 / 3.14;
-	float a=(1-value)/0.25;
-	int X=floor(a);
-
-	switch(X)
+		
+	*G = *R = *B = .0;
+	if (value < 0.25)
 	{
-		case 0: *R=.6;*G=0.1;*B=0.1;break;
-		case 1: *R=.6;*G=.5;*B=0.1;break;
-		case 2: *R=0;*G=.5;*B=0.1;break;
-		case 3: *R=0;*G=.4;*B=.4;break;
-		case 4: *R=0;*G=0.1;*B=.4;break;
+		*B = 4*value;
+	} 
+	else if (value < 0.5)
+	{
+		*G = 4*(value - 0.25);
+		*B = 2 - 4*value;
 	}
-	*B += 0.1;
-	*G += 0.1;
-	*R += 0.1;
+	else if (value < 0.75)
+	{
+		*R = 4*(value - 0.5);
+		*B = 3 - 4*value;
+	}
+	if ((value <= 1) && (value > 0.75))
+	{
+		*R = 4 - 4*(value - 0.75);
+	}
 }
+
 
 //set_colormap: Sets three different types of colormaps
 void set_colormap(float vy, float maxvy)
@@ -58,12 +129,18 @@ void set_colormap(float vy, float maxvy)
    else if (scalar_col==COLOR_RAINBOW){
        summer(vy,&R,&G,&B);
    }
-   else if (scalar_col==COLOR_BANDS)
+   else
        {
           const int NLEVELS = 5;
           vy *= NLEVELS; vy = (int)(vy); vy/= NLEVELS;
-	      rainbow_long(vy,&R,&G,&B);
-	   }
+          if (scalar_col == COLOR_PSYCH1)
+				psychedelic1(vy,&R,&G,&B);
+          if (scalar_col == COLOR_PSYCH2)
+				psychedelic2(vy,&R,&G,&B);
+		  if (scalar_col == COLOR_BANDS)
+				rainbow_long(vy,&R,&G,&B);
+
+		}
    glColor3f(R,G,B);
 }
 
