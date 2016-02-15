@@ -16,6 +16,8 @@ int   scalar_col = 0;           //method for scalar coloring
 int   clamping = 1;
 float clamp_param = 0.1;
 int   NLEVELS = 5;
+int   scaled = 1;
+int   inv_gray = 0;
 
 //set_colormap: Sets three different types of colormaps
 void set_colormap(float vy, float maxvy)
@@ -133,14 +135,23 @@ void visualize(void)
 				float vX = vx[idx];
 				float vY = vy[idx];
 				float size = sqrt(vX*vX + vY*vY);
-				if (size != 0){
+				if ( (size != 0) && (!scaled) ){
 					vX /= 100 * size;
 					vY /= 100 * size;
+					size = 0.01;
 				}
 				glBegin(GL_TRIANGLE_STRIP);
-				set_colormap(size/0.1,1);
-				glVertex2f(wn + (fftw_real)i * wn - 0.2 * vec_scale * vY, hn + (fftw_real)j * hn + 0.2 * vec_scale * vX);
-				glVertex2f(wn + (fftw_real)i * wn + 0.2 * vec_scale * vY, hn + (fftw_real)j * hn - 0.2 * vec_scale * vX);
+				if (!color_dir){
+					if (inv_gray){
+						glColor3f(1 - size/0.05, 1 - size/0.05, 1 - size/0.05); // gray scale
+					} else {
+						glColor3f(size/0.05,size/0.05,size/0.05); // gray scale
+					}
+				} else {
+					direction_to_color(vX, vY, color_dir);
+				}
+				glVertex2f(wn + (fftw_real)i * wn - vY / size, hn + (fftw_real)j * hn + vX / size);
+				glVertex2f(wn + (fftw_real)i * wn + vY / size, hn + (fftw_real)j * hn - vX / size);
 				glVertex2f((wn + (fftw_real)i * wn) + vec_scale * vX, (hn + (fftw_real)j * hn) + vec_scale * vY);
 				glEnd();
 				j += 5;

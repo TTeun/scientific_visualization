@@ -62,15 +62,17 @@ void keyboard(unsigned char key, int x, int y)
 	  case 't': if (dt > -.8) dt -= 0.1; break;
 	  case 'T': dt += 0.1; break;
 	  case 'c': color_dir = 1 - color_dir;  break;
+	  case 'i': inv_gray = 1 - inv_gray;  break;
 	  case 'S': vec_scale *= 1.2; break;
 	  case 's': vec_scale *= 0.8; break;
+	  case 'w': scaled = 1 - scaled; break;
 	  case 'V': visc *= 5; break;
 	  case 'v': visc *= 0.2; break;
 	  case 'x': draw_smoke = 1 - draw_smoke;
 		    if (draw_smoke==0) draw_vecs = 1; break;
 	  case 'y': draw_vecs = 1 - draw_vecs;
 		    if (draw_vecs==0) draw_smoke = 1; break;
-	  case 'm': scalar_col++; if (scalar_col>COLOR_PSYCH2) scalar_col=COLOR_BLACKWHITE; break;
+	  case 'm': scalar_col++; if (scalar_col>3) scalar_col=COLOR_BLACKWHITE; break;
 	  case 'n': NLEVELS ++; break;
 	  case 'b': if (NLEVELS > 0) NLEVELS --; break;
 	  case 'a': frozen = 1-frozen; break;

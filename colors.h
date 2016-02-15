@@ -4,20 +4,18 @@ float absolute(float a){
 
 void summer(float value,float* R,float* G,float* B)
 {
-	value = sin(value);
 	*B = 1;
 	*G = 1-value;
 	*R = 1-value;
 	
 	if ((0.3<value) && (0.35 > value)){
-		*G -= 50*(absolute(value - 0.325) - 0.025); 
-		*R -= 50*(absolute(value - 0.325) - 0.025); 
-		*B = 0.5;	
+		*G -= 40*(absolute(value - 0.325) - 0.025); 
+		*R -= 40*(absolute(value - 0.325) - 0.025); 
+		*B -= 1 - 10*(absolute(value - 0.325) - 0.025);
 	}
 
 	if ((0.55<value) && (0.6 > value)){
-		int offset = (absolute(value - 0.575) - 0.025);
-		*B -= 50*offset;	
+		*G -= 20*(absolute(value - 0.575) - 0.025); 
 	}
 }
 

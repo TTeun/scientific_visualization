@@ -21,6 +21,8 @@ int main(int argc, char **argv)
 	printf("T/t:   increase/decrease simulation timestep\n");
 	printf("S/s:   increase/decrease hedgehog scaling\n");
 	printf("c:     toggle direction coloring on/off\n");
+	printf("i:     invert gray scale\n");
+	printf("w:     toggle scaling to vector size on/off\n");
 	printf("V/v:   increase decrease fluid viscosity\n");
 	printf("x:     toggle drawing matter on/off\n");
 	printf("y:     toggle drawing hedgehogs on/off\n");
