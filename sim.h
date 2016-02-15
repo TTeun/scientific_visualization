@@ -1,7 +1,7 @@
 
 
 //--- SIMULATION PARAMETERS ------------------------------------------------------------------------
-const int DIM = 200;				//size of simulation grid
+const int DIM = 100;				//size of simulation grid
 double dt = 0.5;				//simulation time step
 float visc = 0.0001;				//fluid viscosity
 fftw_real *vx, *vy;             //(vx,vy)   = velocity field at the current moment
@@ -21,10 +21,10 @@ void init_simulation(int n)
 	int i; size_t dim;
 
 	dim     = n * 2*(n/2+1)*sizeof(fftw_real);        //Allocate data structures
-	vx       = (fftw_real*) malloc(dim);
-	vy       = (fftw_real*) malloc(dim);
-	vx0      = (fftw_real*) malloc(dim);
-	vy0      = (fftw_real*) malloc(dim);
+	vx      = (fftw_real*) malloc(dim);
+	vy      = (fftw_real*) malloc(dim);
+	vx0     = (fftw_real*) malloc(dim);
+	vy0     = (fftw_real*) malloc(dim);
 	dim     = n * n * sizeof(fftw_real);
 	fx      = (fftw_real*) malloc(dim);
 	fy      = (fftw_real*) malloc(dim);

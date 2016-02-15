@@ -27,7 +27,6 @@ void set_colormap(float vy, float maxvy)
 	} else {
 		vy = vy/maxvy;
 	}
-	vy = 0.9*vy + .1;
    if (scalar_col==COLOR_BLACKWHITE)
        R = G = B = vy;
    else if (scalar_col==COLOR_RAINBOW){
@@ -74,8 +73,6 @@ void direction_to_color(float x, float y, int method)
 //visualize: This is the main visualization function
 void visualize(void)
 {
-	glutSetWindow(1);
-
 	int        i, j, k, idx; double px,py;
 	fftw_real  wn = (fftw_real)winWidth / (fftw_real)(DIM + 1);   // Grid cell width
 	fftw_real  hn = (fftw_real)winHeight / (fftw_real)(DIM + 1);  // Grid cell heigh
@@ -124,17 +121,31 @@ void visualize(void)
 	}
 	}
 
-	if (draw_vecs)
-	{
-	  glBegin(GL_LINES);				//draw velocities
-	  for (i = 0; i < DIM; i++)
-	    for (j = 0; j < DIM; j++)
-	    {
-		  idx = (j * DIM) + i;
-		  direction_to_color(vx[idx],vy[idx],color_dir);
-		  glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
-		  glVertex2f((wn + (fftw_real)i * wn) + vec_scale * vx[idx], (hn + (fftw_real)j * hn) + vec_scale * vy[idx]);
-	    }
-	  glEnd();
+
+	if (draw_vecs){
+		int i = 0, j;
+		while (i < DIM){
+			j = 0;
+			while (j < DIM){
+				px = wn + (fftw_real)i * wn;
+				py = hn + (fftw_real)(j + 1) * hn;
+				idx = (j * DIM) + i;
+				float vX = vx[idx];
+				float vY = vy[idx];
+				float size = sqrt(vX*vX + vY*vY);
+				if (size != 0){
+					vX /= 100 * size;
+					vY /= 100 * size;
+				}
+				glBegin(GL_TRIANGLE_STRIP);
+				set_colormap(size/0.1,1);
+				glVertex2f(wn + (fftw_real)i * wn - 0.2 * vec_scale * vY, hn + (fftw_real)j * hn + 0.2 * vec_scale * vX);
+				glVertex2f(wn + (fftw_real)i * wn + 0.2 * vec_scale * vY, hn + (fftw_real)j * hn - 0.2 * vec_scale * vX);
+				glVertex2f((wn + (fftw_real)i * wn) + vec_scale * vX, (hn + (fftw_real)j * hn) + vec_scale * vY);
+				glEnd();
+				j += 5;
+			}
+			i += 5;
+		}
 	}
 }
