@@ -7,6 +7,7 @@
 #include <stdio.h>              //for printing the help text
 #include <math.h>               //for various math functions
 #include <GL/glut.h>            //the GLUT graphics library
+#include <GL/glui.h>
 #include "sim.h"
 #include "vis.h"
 #include "inter.h"

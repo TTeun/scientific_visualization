@@ -47,6 +47,7 @@ void display(void)
 //reshape: Handle window resizing (reshaping) events
 void reshape(int w, int h)
 {
+
  	glViewport(0.0f, 0.0f, (GLfloat)w, (GLfloat)h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
