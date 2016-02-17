@@ -42,8 +42,21 @@ int main(int argc, char **argv)
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutIdleFunc(do_one_simulation_step);
+
+  GLUI *glui = GLUI_Master.create_glui( "GLUI" );
+  new GLUI_Checkbox( glui, "Draw vector field", &draw_vecs );
+  new GLUI_Checkbox( glui, "Draw draw", &draw_smoke );
+  (new GLUI_Spinner( glui, "Color levels:", &NLEVELS ))
+    ->set_int_limits( 3, 60 ); 
+   
+  glui->set_main_gfx_window( 1 );
+
+  /* We register the idle callback with GLUI, *not* with GLUT */
+  GLUI_Master.set_glutIdleFunc( do_one_simulation_step ); 
+
 	glutKeyboardFunc(keyboard);
 	glutMotionFunc(drag);
+
 	
 	init_simulation(DIM);	//initialize the simulation data structures
 	glutMainLoop();			//calls do_one_simulation_step, keyboard, display, drag, reshape
