@@ -58,6 +58,11 @@ void reshape(int w, int h)
 //keyboard: Handle key presses
 void keyboard(unsigned char key, int x, int y)
 {
+	
+    
+
+
+
 	switch (key)
 	{
 	  case 't': if (dt > -.8) dt -= 0.1; break;

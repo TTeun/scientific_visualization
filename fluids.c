@@ -39,20 +39,43 @@ int main(int argc, char **argv)
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowSize(500,500);
 	glutCreateWindow("Real-time smoke simulation and visualization");
+
+	GLUI *glui = GLUI_Master.create_glui( "GLUI" );
+
+	new GLUI_Checkbox( glui, "Pause", &frozen );
+
+	GLUI_Panel *vec = new GLUI_Rollout(glui, "Vectors" );
+	new GLUI_Checkbox( vec, "Draw vector field", &draw_vecs );
+	GLUI_Rollout *vec_panel = new GLUI_Rollout(vec, "Vectors options", true );
+	new GLUI_Checkbox( vec_panel, "Scaled to size", &scaled );
+	new GLUI_Checkbox( vec_panel, "Invert gray scale", &inv_gray );
+	(new GLUI_Spinner( vec_panel, "Size:", &vec_scale ))->set_int_limits( 400, 10000); 
+	vec_panel->close();
+
+
+	GLUI_Panel *smoke = new GLUI_Rollout(glui, "Smoke" );
+	new GLUI_Checkbox( smoke, "Draw smoke", &draw_smoke );
+	GLUI_Rollout *smoke_panel = new GLUI_Rollout(smoke, "Smoke options", true );
+	new GLUI_Checkbox( smoke_panel, "Scaling/Clamping", &clamping );
+	(new GLUI_Spinner( smoke_panel, "Color scheme:", &scalar_col ))->set_int_limits( 0, 3); 
+	(new GLUI_Spinner( smoke_panel, "Clamping limit:", &clamp_param ))->set_float_limits( 0.1, 2); 
+	(new GLUI_Spinner( smoke_panel, "Color levels:", &NLEVELS ))->set_int_limits( 1, 60 ); 
+	smoke_panel->close();
+
+
+	GLUI_Rollout *sim_panel = new GLUI_Rollout(glui, "Simulation", true );
+	(new GLUI_Spinner( sim_panel, "Viscosity:", &visc ))->set_float_limits( 0.00002, 0.005); 
+	(new GLUI_Spinner( sim_panel, "Time step dt:", &dt ))->set_float_limits( -0.8, 5); 
+	sim_panel->close();
+
+
+	glui->set_main_gfx_window( 1 );
+
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutIdleFunc(do_one_simulation_step);
-
-  GLUI *glui = GLUI_Master.create_glui( "GLUI" );
-  new GLUI_Checkbox( glui, "Draw vector field", &draw_vecs );
-  new GLUI_Checkbox( glui, "Draw draw", &draw_smoke );
-  (new GLUI_Spinner( glui, "Color levels:", &NLEVELS ))
-    ->set_int_limits( 3, 60 ); 
-   
-  glui->set_main_gfx_window( 1 );
-
-  /* We register the idle callback with GLUI, *not* with GLUT */
-  GLUI_Master.set_glutIdleFunc( do_one_simulation_step ); 
+	/* We register the idle callback with GLUI, *not* with GLUT */
+	GLUI_Master.set_glutIdleFunc( do_one_simulation_step ); 
 
 	glutKeyboardFunc(keyboard);
 	glutMotionFunc(drag);

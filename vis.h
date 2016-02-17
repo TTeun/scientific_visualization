@@ -18,7 +18,6 @@ float clamp_param = 0.1;
 int   NLEVELS = 5;
 int   scaled = 1;
 int   inv_gray = 0;
-		float angle = .15f;
 
 
 
@@ -57,7 +56,7 @@ void set_colormap(float vy, float maxvy)
 //                    using a rainbow colormap. If method==0, simply use the white color
 void direction_to_color(float x, float y, int method)
 {
-	float r,g,b,f;
+	float r,g,b;
 	if (method)
 	{
 	  // f = atan2(y,x) / 3.1415927 + 1;
