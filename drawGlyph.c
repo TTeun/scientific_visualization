@@ -1,3 +1,7 @@
+float glyph_cut = 0.0;
+int x_dist = 10;
+int y_dist = 10;
+
 void direction_to_color(float x, float y, int method)
 {
 	float r, g, b;
@@ -10,38 +14,53 @@ void direction_to_color(float x, float y, int method)
 }
 
 void drawGlyph(fftw_real * valuesX, fftw_real * valuesY) {
-	int i = 0, j, idx;
+	int i = 0, j, k = 0, idx;
 	fftw_real  wn = (fftw_real)winWidth / (fftw_real)(DIM + 1);   // Grid cell width
 	fftw_real  hn = (fftw_real)winHeight / (fftw_real)(DIM + 1);  // Grid cell heigh
 
+	float values[(DIM / y_dist) * (DIM / x_dist)][3];
+	float max_size = 0;
 	while (i < DIM) {
 		j = 0;
 		while (j < DIM) {
 			idx = (j * DIM) + i;
-			float vX = valuesX[idx];
-			float vY = valuesY[idx];
-			float size = sqrt(vX * vX + vY * vY);
-			if ( (size != 0) && (!scaled) ) {
-				vX /= 100 * size;
-				vY /= 100 * size;
-				size = 0.01;
-			}
-			glBegin(GL_TRIANGLE_STRIP);
-			if (!color_dir) {
-				if (inv_gray) {
-					glColor3f(1 - size / 0.05, 1 - size / 0.05, 1 - size / 0.05); // gray scale
-				} else {
-					glColor3f(size / 0.05, size / 0.05, size / 0.05); // gray scale
-				}
-			} else {
-				direction_to_color(vX, vY, color_dir);
-			}
-			glVertex2f(wn + (fftw_real)i * wn - 1.5 * vY / size, hn + (fftw_real)j * hn + 1.5 * vX / size);
-			glVertex2f(wn + (fftw_real)i * wn + vY / size, hn + (fftw_real)j * hn - vX / size);
-			glVertex2f((wn + (fftw_real)i * wn) + vec_scale * vX, (hn + (fftw_real)j * hn) + vec_scale * vY);
-			glEnd();
-			j += 10;
+			values[k][0] = vec_scale * valuesX[idx];
+			values[k][1] = vec_scale * valuesY[idx];
+			values[k][2] = sqrt(values[k][0] * values[k][0] + values[k][1] * values[k][1]);
+			max_size = (max_size > values[k][2]) ? max_size : values[k][2];
+			j += y_dist;
+			k++;
 		}
-		i += 10;
+		i += x_dist;
+	}
+	i = 0, k = 0;
+	float length = 1, x_pos, y_pos;
+
+	while (i < DIM) {
+		j = 0;
+		while (j < DIM) {
+			if (values[k][2] >= glyph_cut) {
+				length = (scaled) ? max_size : values[k][2];
+				glBegin(GL_TRIANGLE_STRIP);
+				if (!color_dir) {
+					if (inv_gray) {
+						glColor3f(1 - values[k][2] / max_size, 1 - values[k][2] / max_size, 1 - values[k][2] / max_size); // gray scale
+					} else {
+						glColor3f(values[k][2] / max_size, values[k][2] / max_size, values[k][2] / max_size); // gray scale
+					}
+				} else {
+					direction_to_color(values[k][0], values[k][1], color_dir);
+				}
+				x_pos = wn + (fftw_real)i * wn;
+				y_pos = hn + (fftw_real)j * hn;
+				glVertex2f(x_pos - 1.5 * values[k][1] / length, y_pos + 1.5 * values[k][0] / length);
+				glVertex2f(x_pos + 1.5 * values[k][1] / length, y_pos - 1.5 * values[k][0] / length);
+				glVertex2f(x_pos + vec_scale * values[k][0] / length, y_pos + vec_scale * values[k][1] / length);
+				glEnd();
+			}
+			j += y_dist;
+			k++;
+		}
+		i += x_dist;
 	}
 }

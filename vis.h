@@ -19,6 +19,7 @@ int   inv_gray = 0;
 
 #include "colors.h"
 #include "drawGlyph.c"
+#include "drawGrad.c"
 
 
 //set_colormap: Sets three different types of colormaps

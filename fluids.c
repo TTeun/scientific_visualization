@@ -15,24 +15,24 @@
 //main: The main program
 int main(int argc, char **argv)
 {
-	printf("Fluid Flow Simulation and Visualization\n");
-	printf("=======================================\n");
-	printf("Click and drag the mouse to steer the flow!\n");
-	printf("T/t:   increase/decrease simulation timestep\n");
-	printf("S/s:   increase/decrease hedgehog scaling\n");
-	printf("c:     toggle direction coloring on/off\n");
-	printf("i:     invert gray scale\n");
-	printf("w:     toggle scaling to vector size on/off\n");
-	printf("V/v:   increase decrease fluid viscosity\n");
-	printf("x:     toggle drawing matter on/off\n");
-	printf("y:     toggle drawing hedgehogs on/off\n");
-	printf("m:     toggle thru scalar coloring\n");
-	printf("k/l:   toggle thru scalar coloring\n");
-	printf("b/n:   decrease/increase number of colors\n");
-	printf("k/l:   decrease/increase clamp maximum\n");
-	printf("o:     swap between clamping and scaling\n");
-	printf("a:     toggle the animation on/off\n");
-	printf("q:     quit\n\n");
+// 	printf("Fluid Flow Simulation and Visualization\n");
+// 	printf("=======================================\n");
+// 	printf("Click and drag the mouse to steer the flow!\n");
+// 	printf("T/t:   increase/decrease simulation timestep\n");
+// 	printf("S/s:   increase/decrease hedgehog scaling\n");
+// 	printf("c:     toggle direction coloring on/off\n");
+// 	printf("i:     invert gray scale\n");
+// 	printf("w:     toggle scaling to vector size on/off\n");
+// 	printf("V/v:   increase decrease fluid viscosity\n");
+// 	printf("x:     toggle drawing matter on/off\n");
+// 	printf("y:     toggle drawing hedgehogs on/off\n");
+// 	printf("m:     toggle thru scalar coloring\n");
+// 	printf("k/l:   toggle thru scalar coloring\n");
+// 	printf("b/n:   decrease/increase number of colors\n");
+// 	printf("k/l:   decrease/increase clamp maximum\n");
+// 	printf("o:     swap between clamping and scaling\n");
+// 	printf("a:     toggle the animation on/off\n");
+// 	printf("q:     quit\n\n");
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
@@ -48,7 +48,9 @@ int main(int argc, char **argv)
 	GLUI_Rollout *vec_panel = new GLUI_Rollout(vec, "Vectors options", true );
 	new GLUI_Checkbox( vec_panel, "Scaled to size", &scaled );
 	new GLUI_Checkbox( vec_panel, "Invert gray scale", &inv_gray );
-	(new GLUI_Spinner( vec_panel, "Size:", &vec_scale ))->set_int_limits( 400, 10000);
+	(new GLUI_Spinner( vec_panel, "Size:", &vec_scale ))->set_int_limits( 10, 100);
+	(new GLUI_Spinner( vec_panel, "glyph cut-off:", &glyph_cut ))->set_float_limits( 0.0, 1.0);
+
 	vec_panel->close();
 
 
