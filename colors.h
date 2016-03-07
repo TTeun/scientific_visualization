@@ -1,3 +1,4 @@
+
 float absolute(float a){
 	return (a > 0)? a : (-a);
 }
@@ -42,7 +43,6 @@ void psychedelic1(float value,float* R,float* G,float* B)
 		*R = 4 - 4*value;
 	}
 }
-
 
 void psychedelic2(float value,float* R,float* G,float* B)
 {
