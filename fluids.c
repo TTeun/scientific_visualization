@@ -66,6 +66,11 @@ int main(int argc, char **argv)
 	GLUI_Panel *vec = new GLUI_Rollout(glui, "Vectors" );
 	new GLUI_Checkbox( vec, "Draw vector field", &draw_vecs );
 	GLUI_Rollout *vec_panel = new GLUI_Rollout(vec, "Vectors options", true );
+	
+	GLUI_RadioGroup *group1 = glui->add_radiogroup_to_panel(vec_panel, &vec_velocity,1,control_cb);
+	glui->add_radiobutton_to_group( group1, "Force" );
+	glui->add_radiobutton_to_group( group1, "Velocity" );
+
 	new GLUI_Checkbox( vec_panel, "Scaled to size", &scaled );
 	new GLUI_Checkbox( vec_panel, "Invert color map", &inv_vec );
 	new GLUI_Checkbox( vec_panel, "Discrete colormap", &disc_vector_col );
@@ -111,12 +116,6 @@ int main(int argc, char **argv)
 	smoke_colors->add_item (2, "Blue");
 	smoke_colors->add_item (3, "Psychedelic");
 	smoke_colors->add_item (4, "hue");
-
-	// GLUI_RadioGroup *group1 = glui->add_radiogroup_to_panel(smoke_panel, &scalar_col,1,control_cb);
-	// glui->add_radiobutton_to_group( group1, "Rainbow" );
-	// glui->add_radiobutton_to_group( group1, "BW" );
-	// glui->add_radiobutton_to_group( group1, "Blue" );
-	// glui->add_radiobutton_to_group( group1, "Psychedelic" );
 
 
 	GLUI_Rollout *sim_panel = new GLUI_Rollout(glui, "Simulation", true );

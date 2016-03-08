@@ -1,4 +1,13 @@
 
+// Flow object parameters
+int   draw_flow = 0;            //draw the flow objects or not
+int   flow_col = 0;              //method for vector coloring
+int   inv_flow = 0;
+int   black_flow = 1;
+int   flow_col_scale = 500;
+int   seed_spacing = 30;
+int   path_length = 100;
+
 void seed(void) {
 	fftw_real  wn = (fftw_real)winWidth / (fftw_real)(DIM + 1);   // Grid cell width
 	fftw_real  hn = (fftw_real)winHeight / (fftw_real)(DIM + 1);  // Grid cell heigh
@@ -57,16 +66,16 @@ void seed(void) {
 					y_vel /= size;
 					x_vel /= size;
 
-					X += 0.05 * wn * x_vel;
-					Y += 0.05 * hn * y_vel;
+					X += 0.4 * wn * x_vel;
+					Y += 0.4 * hn * y_vel;
 					glVertex2f(X, Y);
 				}
 			}
 			glEnd();
 			glBegin(GL_TRIANGLE_STRIP);
-			glVertex2f(X + seed_spacing * x_vel / 3, Y + seed_spacing * y_vel / 3);
-			glVertex2f(X - seed_spacing * y_vel / 10, Y + seed_spacing * x_vel / 10);
-			glVertex2f(X + seed_spacing * y_vel / 10, Y - seed_spacing * x_vel / 10);
+			glVertex2f(X + seed_spacing * x_vel / 6, Y + seed_spacing * y_vel / 6);
+			glVertex2f(X - seed_spacing * y_vel / 16, Y + seed_spacing * x_vel / 16);
+			glVertex2f(X + seed_spacing * y_vel / 16, Y - seed_spacing * x_vel / 16);
 			glEnd();
 		}
 	}

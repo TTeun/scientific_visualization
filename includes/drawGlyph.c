@@ -1,3 +1,13 @@
+
+// Vector parameters
+int   draw_vecs = 1;            //draw the vector field or not
+float vec_scale = 10;			//scaling of hedgehogs
+int   vec_col = 0;              //method for vector coloring
+int   scaled = 1;
+int   inv_vec = 0;
+int   black_vec = 1;
+int   disc_vector_col = 0;
+
 float glyph_cut = 0.0;
 int x_dist = 10;
 int y_dist = 10;
