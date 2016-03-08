@@ -1,6 +1,6 @@
 OBJECTS     = fluids.o
 CFILES      = $(OBJECTS:.o=.c)
-EXECFILE    = smoke
+EXECFILE    = bin/smoke
 INCLUDEDIRS = -I./fftw-2.1.5/include/ -I./includes
 LIBDIRS     = -L./fftw-2.1.5/lib
 LIBS 		= -lm -lGL -lGLU -lglut -lrfftw -lfftw -lglui
