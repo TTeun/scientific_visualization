@@ -1,3 +1,7 @@
+#ifndef _COLORS
+#define _COLORS
+
+#include "drawSmoke.h"
 #include "colors.c"
 
 float scaler(float x) ;
@@ -13,3 +17,5 @@ void rainbow_long(float value, float* R, float* G, float* B);
 void hue(float H);
 
 void set_colormap(float vy, float maxvy, int method, int inv, int disc_col);
+
+#endif

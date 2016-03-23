@@ -3,10 +3,13 @@
 int   draw_flow = 0;            //draw the flow objects or not
 int   flow_col = 0;              //method for vector coloring
 int   inv_flow = 0;
-int   black_flow = 1;
+int   black_flow = 0;
 int   flow_col_scale = 500;
 int   seed_spacing = 30;
 int   path_length = 100;
+float cust_R = 0.0;
+float cust_G = 0.0;
+float cust_B = 0.0;
 
 void seed(void) {
 	fftw_real  wn = (fftw_real)winWidth / (fftw_real)(DIM + 1);   // Grid cell width
@@ -28,10 +31,10 @@ void seed(void) {
 	int i, j, k;
 	for (XX = 10; XX < winWidth; XX += seed_spacing) {
 		for (YY = 10; YY < winHeight; YY += seed_spacing) {
+			glColor3f(cust_R, cust_G, cust_B);
 			X = XX;
 			Y = YY;
 			glBegin(GL_LINE_STRIP);
-			glColor3f(.2, .2, .2);
 			glVertex2f(X, Y);
 			k = 0;
 
@@ -58,10 +61,11 @@ void seed(void) {
 				size = (y_vel * y_vel + x_vel * x_vel);
 
 				if (size > 0) {
+					glColor3f(cust_R, cust_G, cust_B);
 					if (!black_flow) {
 						set_colormap(flow_col_scale * size, 1, flow_col, inv_flow, 0);
+					} else {
 					}
-					// glColor3f(.1, .1, .1);
 					size = sqrt(size);
 					y_vel /= size;
 					x_vel /= size;

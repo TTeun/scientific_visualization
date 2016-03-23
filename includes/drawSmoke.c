@@ -1,6 +1,3 @@
-#ifndef _SMOKE
-#define _SMOKE
-
 
 // Smoke parameters
 int   color_dir = 0;            //use direction color-coding or not
@@ -8,6 +5,8 @@ int   draw_smoke = 0;           //draw the smoke or not
 int   scalar_col = 0;           //method for scalar coloring
 int   disc_scalar_col = 0;
 int   col_scaler = 0;
+int   inv_scalar = 0;
+
 
 #include "colors.h"
 
@@ -102,4 +101,3 @@ void legend(void) {
 		glEnd();
 	}
 }
-#endif

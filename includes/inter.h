@@ -23,7 +23,7 @@ void reshape(int w, int h)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(0.0, (GLdouble)w, 0.0, (GLdouble)h);
-	winWidth = w; winHeight = h;
+	winWidth = w - 200; winHeight = h;
 }
 
 //keyboard: Handle key presses

@@ -1,7 +1,5 @@
-#ifndef _COLORS
-#define _COLORS
 
-const int COLOR_BLACKWHITE = 1; 
+const int COLOR_BLACKWHITE = 1;
 const int COLOR_RAINBOW = 2;
 const int COLOR_BANDS = 0;
 const int COLOR_PSYCH1 = 3;
@@ -75,14 +73,14 @@ void rainbow_long(float value, float* R, float* G, float* B)
 		*G = 4 * (value - 0.25);
 		*B = 2 - 4 * value;
 	}
-	else if (value < 0.75)
+	else if (value < 0.85)
 	{
-		*R = 4 * (value - 0.5);
-		*G = 3 - 4 * value;
+		*R = (value - 0.5) / 0.35;
+		*G = 1 - (value - 0.5) / 0.35;
 	}
 	else if (value <= 1)
 	{
-		*R = 4 - 4 * (value - 0.75);
+		*R = 4 - (value - 0.85) / 0.15;
 	}
 }
 
@@ -107,10 +105,6 @@ void set_colormap(float vy, float maxvy, int method, int inv, int disc_col)
 		vy = vy / maxvy;
 	}
 
-	if (col_scaler) {
-		vy = scaler(vy);
-	}
-
 	vy = (inv) ? (1 - vy) : vy;
 	if (disc_col) {
 		vy *= NLEVELS; vy = (int)(vy); vy /= NLEVELS;
@@ -132,4 +126,3 @@ void set_colormap(float vy, float maxvy, int method, int inv, int disc_col)
 
 }
 
-#endif

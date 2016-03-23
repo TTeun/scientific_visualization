@@ -3,30 +3,14 @@
 int   winWidth, winHeight;      //size of the graphics window, in pixels
 
 
-// Vector parameters
-int   draw_vecs = 1;            //draw the vector field or not
-float vec_scale = 10;			//scaling of hedgehogs
-int   vec_col = 0;              //method for vector coloring
-int   scaled = 1;
-int   inv_vec = 0;
-int   black_vec = 1;
-int   disc_vector_col = 0;
 
-// Flow object parameters
-int   draw_flow = 0;            //draw the flow objects or not
-int   flow_col = 0;              //method for vector coloring
-int   inv_scalar = 0;
-int   inv_flow = 0;
-int   black_flow = 1;
-int   flow_col_scale = 500;
-int   seed_spacing = 30;
-int   path_length = 100;
-
-#include "drawSmoke.c"
+#include "drawSmoke.h"
 #include "colors.h"
-#include "seedFlow.c"
+#include "seedFlow.h"
 #include "drawGlyph.c"
 #include "drawGrad.c"
+
+int vec_velocity = 1;
 
 // [0 2 3 ... DIM-1]
 
@@ -52,10 +36,14 @@ void visualize(void)
 	}
 
 	if (draw_vecs) {
-		drawGlyph(vx, vy);
+		if (vec_velocity) {
+			drawGlyph(vx, vy);
+		} else {
+			drawGlyph(fx, fy);
+		}
 	}
 
-	if (draw_smoke){
+	if (draw_smoke && !(color_dir)) {
 		legend();
 	}
 

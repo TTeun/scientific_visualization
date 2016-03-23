@@ -35,39 +35,26 @@ void control_cb( int control )
 //main: The main program
 int main(int argc, char **argv)
 {
-// 	printf("Fluid Flow Simulation and Visualization\n");
-// 	printf("=======================================\n");
-// 	printf("Click and drag the mouse to steer the flow!\n");
-// 	printf("T/t:   increase/decrease simulation timestep\n");
-// 	printf("S/s:   increase/decrease hedgehog scaling\n");
-// 	printf("c:     toggle direction coloring on/off\n");
-// 	printf("i:     invert gray scale\n");
-// 	printf("w:     toggle scaling to vector size on/off\n");
-// 	printf("V/v:   increase decrease fluid viscosity\n");
-// 	printf("x:     toggle drawing matter on/off\n");
-// 	printf("y:     toggle drawing hedgehogs on/off\n");
-// 	printf("m:     toggle thru scalar coloring\n");
-// 	printf("k/l:   toggle thru scalar coloring\n");
-// 	printf("b/n:   decrease/increase number of colors\n");
-// 	printf("k/l:   decrease/increase clamp maximum\n");
-// 	printf("o:     swap between clamping and scaling\n");
-// 	printf("a:     toggle the animation on/off\n");
-// 	printf("q:     quit\n\n");
-
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-	glutInitWindowSize(500, 500);
-	glutCreateWindow("Real-time smoke simulation and visualization");
+	glutInitWindowSize(800, 800);
+	int main_window = glutCreateWindow("Real-time smoke simulation and visualization");
 
-	GLUI *glui = GLUI_Master.create_glui( "GLUI" );
-	glui->add_button("Quit", 0, (GLUI_Update_CB)exit);
+	GLUI *glui = GLUI_Master.create_glui_subwindow(main_window, GLUI_SUBWINDOW_RIGHT);
+	// Simulation controls
+	GLUI_Rollout *sim_panel = new GLUI_Rollout(glui, "Simulation", true );
+	(new GLUI_Spinner( sim_panel, "Viscosity:", &visc ))->set_float_limits( 0.00002, 0.005);
+	(new GLUI_Spinner( sim_panel, "Time step dt:", &dt ))->set_float_limits( -0.8, 5);
+	new GLUI_Checkbox( sim_panel, "Pause", &frozen );
 	glui->add_button("Restart", 0, control_cb);
-
+	glui->add_button("Quit", 0, (GLUI_Update_CB)exit);
+	
+	// Vector controls
 	GLUI_Panel *vec = new GLUI_Rollout(glui, "Vectors" );
 	new GLUI_Checkbox( vec, "Draw vector field", &draw_vecs );
 	GLUI_Rollout *vec_panel = new GLUI_Rollout(vec, "Vectors options", true );
-	
-	GLUI_RadioGroup *group1 = glui->add_radiogroup_to_panel(vec_panel, &vec_velocity,1,control_cb);
+
+	GLUI_RadioGroup *group1 = glui->add_radiogroup_to_panel(vec_panel, &vec_velocity, 1, control_cb);
 	glui->add_radiobutton_to_group( group1, "Force" );
 	glui->add_radiobutton_to_group( group1, "Velocity" );
 
@@ -84,12 +71,19 @@ int main(int argc, char **argv)
 	vec_colors->add_item (3, "Psychedelic");
 	vec_colors->add_item (4, "hue");
 
+	// Flow controls
 	GLUI_Panel *flow = new GLUI_Rollout(glui, "Flow" );
 	new GLUI_Checkbox( flow, "Draw flow ojects", &draw_flow );
 	GLUI_Rollout *flow_panel = new GLUI_Rollout(flow, "Flow options", true );
 	new GLUI_Checkbox( flow_panel, "Invert color map", &inv_flow );
-	new GLUI_Checkbox( flow_panel, "Black/Color", &black_flow );
 	(new GLUI_Spinner( flow_panel, "Seed spacing:", &seed_spacing ))->set_int_limits( 5, 150);
+	GLUI_Rollout *flow_col_panel = new GLUI_Rollout(flow, "custom color", true );
+
+	new GLUI_Checkbox( flow_col_panel, "Custom color", &black_flow );
+	(new GLUI_Spinner( flow_col_panel, "custom R:", &cust_R ))->set_float_limits( 0, 1);
+	(new GLUI_Spinner( flow_col_panel, "custom G:", &cust_G ))->set_float_limits( 0, 1);
+	(new GLUI_Spinner( flow_col_panel, "custom B:", &cust_B ))->set_float_limits( 0, 1);
+
 	(new GLUI_Spinner( flow_panel, "Path length:", &path_length ))->set_int_limits( 20, 350);
 	GLUI_Listbox *flow_colors = glui->add_listbox_to_panel (flow_panel, "Color", &flow_col);
 	flow_colors->add_item (0, "Rainbow");
@@ -98,8 +92,8 @@ int main(int argc, char **argv)
 	flow_colors->add_item (3, "Psychedelic");
 	flow_colors->add_item (4, "hue");
 
-	glui->add_column(true);
 
+	// Smoke controls
 	GLUI_Panel *smoke = new GLUI_Rollout(glui, "Smoke" );
 	new GLUI_Checkbox( smoke, "Draw smoke", &draw_smoke );
 	new GLUI_Checkbox( smoke, "Direction hue", &color_dir );
@@ -117,11 +111,6 @@ int main(int argc, char **argv)
 	smoke_colors->add_item (3, "Psychedelic");
 	smoke_colors->add_item (4, "hue");
 
-
-	GLUI_Rollout *sim_panel = new GLUI_Rollout(glui, "Simulation", true );
-	(new GLUI_Spinner( sim_panel, "Viscosity:", &visc ))->set_float_limits( 0.00002, 0.005);
-	(new GLUI_Spinner( sim_panel, "Time step dt:", &dt ))->set_float_limits( -0.8, 5);
-	new GLUI_Checkbox( sim_panel, "Pause", &frozen );
 
 
 	glui->set_main_gfx_window( 1 );
