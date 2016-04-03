@@ -42,17 +42,17 @@ int main(int argc, char **argv)
 
 	GLUI *glui = GLUI_Master.create_glui_subwindow(main_window, GLUI_SUBWINDOW_RIGHT);
 	// Simulation controls
-	GLUI_Rollout *sim_panel = new GLUI_Rollout(glui, "Simulation", true );
+	GLUI_Rollout *sim_panel = new GLUI_Rollout(glui, "Simulation", false );
 	(new GLUI_Spinner( sim_panel, "Viscosity:", &visc ))->set_float_limits( 0.00002, 0.005);
 	(new GLUI_Spinner( sim_panel, "Time step dt:", &dt ))->set_float_limits( -0.8, 5);
 	new GLUI_Checkbox( sim_panel, "Pause", &frozen );
 	glui->add_button("Restart", 0, control_cb);
 	glui->add_button("Quit", 0, (GLUI_Update_CB)exit);
-	
+
 	// Vector controls
 	GLUI_Panel *vec = new GLUI_Rollout(glui, "Vectors" );
 	new GLUI_Checkbox( vec, "Draw vector field", &draw_vecs );
-	GLUI_Rollout *vec_panel = new GLUI_Rollout(vec, "Vectors options", true );
+	GLUI_Rollout *vec_panel = new GLUI_Rollout(vec, "Vectors options", false );
 
 	GLUI_RadioGroup *group1 = glui->add_radiogroup_to_panel(vec_panel, &vec_velocity, 1, control_cb);
 	glui->add_radiobutton_to_group( group1, "Force" );
@@ -74,10 +74,10 @@ int main(int argc, char **argv)
 	// Flow controls
 	GLUI_Panel *flow = new GLUI_Rollout(glui, "Flow" );
 	new GLUI_Checkbox( flow, "Draw flow ojects", &draw_flow );
-	GLUI_Rollout *flow_panel = new GLUI_Rollout(flow, "Flow options", true );
+	GLUI_Rollout *flow_panel = new GLUI_Rollout(flow, "Flow options", false );
 	new GLUI_Checkbox( flow_panel, "Invert color map", &inv_flow );
 	(new GLUI_Spinner( flow_panel, "Seed spacing:", &seed_spacing ))->set_int_limits( 5, 150);
-	GLUI_Rollout *flow_col_panel = new GLUI_Rollout(flow, "custom color", true );
+	GLUI_Rollout *flow_col_panel = new GLUI_Rollout(flow, "custom color", false );
 
 	new GLUI_Checkbox( flow_col_panel, "Custom color", &black_flow );
 	(new GLUI_Spinner( flow_col_panel, "custom R:", &cust_R ))->set_float_limits( 0, 1);
@@ -97,7 +97,7 @@ int main(int argc, char **argv)
 	GLUI_Panel *smoke = new GLUI_Rollout(glui, "Smoke" );
 	new GLUI_Checkbox( smoke, "Draw smoke", &draw_smoke );
 	new GLUI_Checkbox( smoke, "Direction hue", &color_dir );
-	GLUI_Rollout *smoke_panel = new GLUI_Rollout(smoke, "Smoke options", true );
+	GLUI_Rollout *smoke_panel = new GLUI_Rollout(smoke, "Smoke options", false );
 	new GLUI_Checkbox( smoke_panel, "Scaling/Clamping", &clamping );
 	new GLUI_Checkbox( smoke_panel, "Invert color map", &inv_scalar );
 	new GLUI_Checkbox( smoke_panel, "Discrete color map", &disc_scalar_col );
@@ -116,12 +116,12 @@ int main(int argc, char **argv)
 	glui->set_main_gfx_window( 1 );
 
 	glutDisplayFunc(display);
-	glutReshapeFunc(reshape);
+	GLUI_Master.set_glutReshapeFunc( reshape );
 	glutIdleFunc(do_one_simulation_step);
 	/* We register the idle callback with GLUI, *not* with GLUT */
 	GLUI_Master.set_glutIdleFunc( do_one_simulation_step );
 
-	glutKeyboardFunc(keyboard);
+	GLUI_Master.set_glutKeyboardFunc( keyboard );
 	glutMotionFunc(drag);
 
 

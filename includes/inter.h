@@ -19,11 +19,11 @@ void display(void)
 void reshape(int w, int h)
 {
 
-	glViewport(0.0f, 0.0f, (GLfloat)w, (GLfloat)h);
+	GLUI_Master.auto_set_viewport();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(0.0, (GLdouble)w, 0.0, (GLdouble)h);
-	winWidth = w - 200; winHeight = h;
+	winWidth = w; winHeight = h;
 }
 
 //keyboard: Handle key presses
@@ -63,7 +63,7 @@ void drag(int mx, int my)
 	static int lmx = 0, lmy = 0;				//remembers last mouse location
 
 	// Compute the array index that corresponds to the cursor location
-	xi = (int)clamp((double)(DIM + 1) * ((double)mx / (double)winWidth));
+	xi = (int)clamp((double)(DIM + 1) * ((double)mx / ((double)winWidth - 200)));
 	yi = (int)clamp((double)(DIM + 1) * ((double)(winHeight - my) / (double)winHeight));
 
 	X = xi; Y = yi;

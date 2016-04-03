@@ -1,6 +1,6 @@
 
 // Vector parameters
-int   draw_vecs = 1;            //draw the vector field or not
+int   draw_vecs = 0;            //draw the vector field or not
 float vec_scale = 10;			//scaling of hedgehogs
 int   vec_col = 0;              //method for vector coloring
 int   scaled = 1;
