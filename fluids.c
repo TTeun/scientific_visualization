@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 
 	GLUI_RadioGroup *group1 = glui->add_radiogroup_to_panel(vec_panel, &vec_grad, 1, control_cb);
 	glui->add_radiobutton_to_group( group1, "Gradient" );
-	glui->add_radiobutton_to_group( group1, "Force" );
+	glui->add_radiobutton_to_group( group1, "Velocity" );
 
 	new GLUI_Checkbox( vec_panel, "Scaled to size", &scaled );
 	new GLUI_Checkbox( vec_panel, "Invert color map", &inv_vec );

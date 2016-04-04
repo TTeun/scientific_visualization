@@ -75,22 +75,30 @@ void stream_surf() {
 			y_vel += x1x * y1y * vy[idx + DIM + 1];
 			y_vel += x1x * y2y * vy[idx + 1];
 
-			XX += 1 * wn * x_vel;
-			YY += 1 * hn * y_vel;
+			XX += 2 * wn * x_vel;
+			YY += 2 * hn * y_vel;
 			if (!(XX < 0 || YY < 0 || XX > winWidth || YY > winHeight)) {
 				Xvals[dummy][start_index + 1] = XX;
 				Yvals[dummy][start_index + 1] = YY;
 			}	
 		}
 	}
-
+	
+	float x, y;
 	int draw_index = start_index;
-	for (i = 0; i < (duration - 1); i++) {
+	for (i = 0; i < (duration - 1); i += 1) {
 		glBegin(GL_TRIANGLE_STRIP);
 		for (j = 1; j < steps ; j ++) {
-			glColor3f(1, (float)i / duration, (float)i / duration);
-			glVertex3f(Xvals[j][(draw_index + 1) % 50], tilter * i + Yvals[j][(draw_index + 1) % 50], -1);
-			glVertex3f(Xvals[j][draw_index], tilter * (i + 1) + Yvals[j][draw_index ], -1);
+			x = Xvals[j][(draw_index + 1) % 50];
+			y = tilter * i + Yvals[j][(draw_index + 1) % 50];
+			glColor3f(1, (float)(i) / duration, (float)(i) / duration);
+			glVertex2f(x, y);
+			
+			x = Xvals[j][draw_index];
+			y =  tilter * (i + 1) + Yvals[j][draw_index ];
+			glColor3f(1, (float)(i) / duration, (float)(i + 1) / duration);
+			glVertex2f(x, y);
+					
 		}
 		draw_index --;
 		draw_index = draw_index % max_duration;
@@ -99,5 +107,19 @@ void stream_surf() {
 	}
 	start_index ++;
 	start_index = (start_index % max_duration);
+	
+/*	glBegin(GL_TRIANGLE_STRIP);
+  	GLushort pixel[3];
+
+	for (i = 0; i < winWidth; i ++){
+		glReadBuffer( GL_FRONT);
+		glReadPixels(i * winWidth, i * winWidth, 1, 1, GL_RGB, GL_UNSIGNED_SHORT, pixel);
+		glColor3us(32 * pixel[0], pixel[1], pixel[2] );
+		glVertex2f(i,i);
+		glVertex2f(i,1+i);
+	}
+	glEnd(); */
+
+
 
 }

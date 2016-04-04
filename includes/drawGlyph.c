@@ -12,17 +12,6 @@ float glyph_cut = 0.0;
 int x_dist = 10;
 int y_dist = 10;
 
-void direction_to_color(float x, float y, int method)
-{
-	float r, g, b;
-	if (method)
-	{
-	}
-	else
-	{ r = g = b = 1; }
-	glColor3f(r, g, b);
-}
-
 void drawGlyph(fftw_real * valuesX, fftw_real * valuesY) {
 	int i = 0, j, k = 0, idx;
 	fftw_real  wn = (fftw_real)winWidth / (fftw_real)(DIM + 1);   // Grid cell width

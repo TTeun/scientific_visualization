@@ -43,11 +43,12 @@ void visualize(void)
 	}
 
 
-	if (draw_smoke && !(color_dir)) {
-		legend();
-	}
 	if (draw_surf) {
 		stream_surf();
+	}
+
+	if (draw_smoke && !(color_dir)) {
+		legend();
 	}
 }
 
