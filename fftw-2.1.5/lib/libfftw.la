@@ -29,4 +29,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/Documents/scivis/scientific_visualization/fftw-2.1.5//lib'
+libdir='/net/users/csg/csg2038/Vakken/ScientificVis1011/Smoke/fftw-2.1.5//lib'

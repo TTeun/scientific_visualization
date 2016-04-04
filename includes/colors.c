@@ -29,9 +29,6 @@ void summer(float value, float* R, float* G, float* B)
 		*B -= 1 - 10 * (absolute(value - 0.325) - 0.025);
 	}
 
-	if ((0.55 < value) && (0.6 > value)) {
-		*G -= 20 * (absolute(value - 0.575) - 0.025);
-	}
 }
 
 void psychedelic1(float value, float* R, float* G, float* B)
@@ -97,18 +94,24 @@ void hue(float H)
 void set_colormap(float vy, float maxvy, int method, int inv, int disc_col)
 {
 	float R, G, B;
-	if (clamping) {
-		if (vy > clamp_param) vy = clamp_param;
-		vy /= clamp_param;
+	if (maxvy > 0){
+		if (clamping) {
+			if (vy > clamp_param) vy = clamp_param;
+			vy /= clamp_param;
+		} else {
+			vy = vy / maxvy;
+		}
 	} else {
-		vy = vy / maxvy;
+		vy = 0;
 	}
 
 	vy = (inv) ? (1 - vy) : vy;
+		vy -= 0.001;
+
 	if (disc_col) {
 		vy *= NLEVELS; vy = (int)(vy); vy /= NLEVELS;
 	}
-
+	if (vy < 0) vy = 0;
 	if (method == COLOR_BLACKWHITE)
 		R = G = B = vy;
 	if (method == COLOR_RAINBOW)
@@ -121,7 +124,7 @@ void set_colormap(float vy, float maxvy, int method, int inv, int disc_col)
 	glColor3f(R, G, B);
 
 	if (method == COLOR_HUE)
-		hue(0.1 + 0.90 * vy);
+		hue(0.03 + 0.97 * vy);
 
 }
 

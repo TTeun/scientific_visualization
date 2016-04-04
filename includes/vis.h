@@ -9,7 +9,7 @@ int   winWidth, winHeight;      //size of the graphics window, in pixels
 #include "drawGlyph.c"
 #include "drawGrad.c"
 #include "streamsurf.c"
-int vec_velocity = 1;
+int vec_grad = 1;
 
 // [0 2 3 ... DIM-1]
 
@@ -35,12 +35,13 @@ void visualize(void)
 	}
 
 	if (draw_vecs) {
-		if (vec_velocity) {
+		if (vec_grad) {
 			drawGlyph(vx, vy);
-		} else {
-			drawGlyph(fx, fy);
+		} else {					
+			drawGrad(rho);
 		}
 	}
+
 
 	if (draw_smoke && !(color_dir)) {
 		legend();

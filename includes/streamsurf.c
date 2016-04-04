@@ -4,9 +4,13 @@ int start_index = 0;
 int init_surf = 0;
 float Xvals[2001][50];
 float Yvals[2001][50];
-int draw_surf = 1;
+int draw_surf = 0;
 int tilter = 5.0;
-
+int X_center = 400;
+int Y_center = 400;
+int radius = 100;
+float angle = 3.1415;
+float angle_offset = 0;
 
 void stream_surf() {
 	duration = (duration == max_duration) ? max_duration : (duration + 1);
@@ -29,12 +33,17 @@ void stream_surf() {
 
 	int i = 0;
 	if (!init_surf) {
-		float t = 0;
-		for (t = 0; t < steps; t ++) {
-			Xvals[i][0] = winWidth / 2 + 100 * cos(1 * t * 3.1415 / steps);
-			Yvals[i][0] = winHeight / 2 + 100 * sin(1 * t * 3.1415 / steps);
-			i ++;
-		}
+			float t = 0;
+			for (t = 0; t < steps; t ++) {
+				Xvals[i][0] = X_center + radius * cos(angle_offset + t * angle / steps);
+				Yvals[i][0] = Y_center / 2 + radius * sin(angle_offset + t * angle / steps);
+				if (Xvals[i][0] < 0) Xvals[i][0] = 0;
+				if (Yvals[i][0] < 0) Yvals[i][0] = 0;
+				if (Xvals[i][0] > winWidth) Xvals[i][0] = winWidth;
+				
+				i ++;
+			
+		} 
 		init_surf = 1;
 	}
 
@@ -44,6 +53,9 @@ void stream_surf() {
 		XX = Xvals[dummy][start_index];
 		YY = Yvals[dummy][start_index];
 		if (!(XX < 0 || YY < 0 || XX > winWidth || YY > winHeight)) {
+			Xvals[dummy][start_index + 1] = XX;
+			Yvals[dummy][start_index + 1] = YY;
+
 			i = XX / wn;
 			j = YY / hn;
 
@@ -65,8 +77,10 @@ void stream_surf() {
 
 			XX += 1 * wn * x_vel;
 			YY += 1 * hn * y_vel;
-			Xvals[dummy][start_index + 1] = XX;
-			Yvals[dummy][start_index + 1] = YY;
+			if (!(XX < 0 || YY < 0 || XX > winWidth || YY > winHeight)) {
+				Xvals[dummy][start_index + 1] = XX;
+				Yvals[dummy][start_index + 1] = YY;
+			}	
 		}
 	}
 
