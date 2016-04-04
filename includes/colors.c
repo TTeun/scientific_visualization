@@ -86,7 +86,6 @@ void rainbow_long(float value, float* R, float* G, float* B)
 
 void hue(float H)
 {
-	H = H;
 	float R, G, B;
 	R = absolute(H * 6 - 3) - 1;
 	G = 2 - absolute(H * 6 - 2);

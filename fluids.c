@@ -14,6 +14,9 @@
 void control_cb( int control )
 {
 	if (control == 0) {
+		init_surf = 0;
+		duration = 0;
+		start_index  = 0;
 		int i, j, idx;
 		for (i = 0; i < DIM; i++) {
 			for (j = 0; j < DIM; j++) {
@@ -30,17 +33,20 @@ void control_cb( int control )
 	}
 }
 
-
-
 //main: The main program
 int main(int argc, char **argv)
 {
-	glutInit(&argc, argv);
+	glutInit (&argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowSize(800, 800);
 	int main_window = glutCreateWindow("Real-time smoke simulation and visualization");
 
 	GLUI *glui = GLUI_Master.create_glui_subwindow(main_window, GLUI_SUBWINDOW_RIGHT);
+
+	new GLUI_Checkbox( glui, "surf", &draw_surf );
+	(new GLUI_Spinner( glui, "tilter:", &tilter ))->set_int_limits( -15, 15);
+
+
 	// Simulation controls
 	GLUI_Rollout *sim_panel = new GLUI_Rollout(glui, "Simulation", false );
 	(new GLUI_Spinner( sim_panel, "Viscosity:", &visc ))->set_float_limits( 0.00002, 0.005);
@@ -111,19 +117,14 @@ int main(int argc, char **argv)
 	smoke_colors->add_item (3, "Psychedelic");
 	smoke_colors->add_item (4, "hue");
 
-
-
-	glui->set_main_gfx_window( 1 );
-
 	glutDisplayFunc(display);
 	GLUI_Master.set_glutReshapeFunc( reshape );
-	glutIdleFunc(do_one_simulation_step);
 	/* We register the idle callback with GLUI, *not* with GLUT */
+	glutIdleFunc(do_one_simulation_step);
 	GLUI_Master.set_glutIdleFunc( do_one_simulation_step );
 
 	GLUI_Master.set_glutKeyboardFunc( keyboard );
 	glutMotionFunc(drag);
-
 
 	init_simulation(DIM);	//initialize the simulation data structures
 	glutMainLoop();			//calls do_one_simulation_step, keyboard, display, drag, reshape

@@ -159,7 +159,7 @@ void set_forces(void)
 //      - gluPostRedisplay: draw a new visualization frame
 void do_one_simulation_step(void)
 {
-	
+
 	if (!frozen)
 	{
 		set_forces();

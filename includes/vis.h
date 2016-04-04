@@ -3,21 +3,20 @@
 int   winWidth, winHeight;      //size of the graphics window, in pixels
 
 
-
 #include "drawSmoke.h"
 #include "colors.h"
 #include "seedFlow.h"
 #include "drawGlyph.c"
 #include "drawGrad.c"
-
+#include "streamsurf.c"
 int vec_velocity = 1;
 
 // [0 2 3 ... DIM-1]
 
 //visualize: This is the main visualization function
+
 void visualize(void)
 {
-
 	if (draw_smoke)
 	{
 		smoke();
@@ -46,7 +45,9 @@ void visualize(void)
 	if (draw_smoke && !(color_dir)) {
 		legend();
 	}
-
+	if (draw_surf) {
+		stream_surf();
+	}
 }
 
 
